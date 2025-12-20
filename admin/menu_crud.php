@@ -80,10 +80,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && (isset($_POST['tambah_menu']) || iss
         $stmt = null; // Inisialisasi awal
         if (isset($_POST['tambah_menu'])) {
             $stmt = $koneksi->prepare("INSERT INTO menu (nama_menu, deskripsi, harga, kategori, gambar_path, status_tersedia) VALUES (?, ?, ?, ?, ?, ?)");
-            $stmt->bind_param("sssisi", $nama_menu, $deskripsi, $harga, $kategori, $gambar_path, $status_tersedia);
+            $stmt->bind_param("sssssi", $nama_menu, $deskripsi, $harga, $kategori, $gambar_path, $status_tersedia);
         } else {
             $stmt = $koneksi->prepare("UPDATE menu SET nama_menu=?, deskripsi=?, harga=?, kategori=?, gambar_path=?, status_tersedia=? WHERE id_menu=?");
-            $stmt->bind_param("sssisi i", $nama_menu, $deskripsi, $harga, $kategori, $gambar_path, $status_tersedia, $id_menu);
+            $stmt->bind_param("sssssii", $nama_menu, $deskripsi, $harga, $kategori, $gambar_path, $status_tersedia, $id_menu);
         }
 
         if ($stmt && $stmt->execute()) {
@@ -188,12 +188,18 @@ if (isset($_GET['msg'])) {
                 <label>Harga:</label><br>
                 <input type="number" name="harga" value="<?= $menu_data['harga']; ?>" required><br><br>
 
+                <label>Deskripsi:</label><br>
+                <textarea name="deskripsi" rows="4" cols="50"><?= $menu_data['deskripsi']; ?></textarea><br><br>
+
                 <label>Kategori:</label><br>
                 <select name="kategori">
                     <?php foreach($kategori_list as $k): ?>
                         <option value="<?= $k ?>" <?= ($menu_data['kategori'] == $k) ? 'selected' : '' ?>><?= $k ?></option>
                     <?php endforeach; ?>
                 </select><br><br>
+
+                <label>Status Tersedia:</label><br>
+                <input type="checkbox" name="status_tersedia" value="1" <?= ($menu_data['status_tersedia'] == 1) ? 'checked' : '' ?>> Tersedia<br><br>
 
                 <label>Gambar:</label><br>
                 <input type="file" name="gambar_baru"><br><br>
